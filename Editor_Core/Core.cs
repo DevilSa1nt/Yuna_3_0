@@ -18,8 +18,10 @@ namespace Editor_Core
             {
                 string code = File.ReadAllText(filePath);
 
-                string newCode = code.Replace(pattern, replacement);
+                // Расшифровка управляющих символов (\n -> перенос строки и т.д.)
+                replacement = Unescape(replacement);
 
+                string newCode = code.Replace(pattern, replacement);
                 File.WriteAllText(filePath, newCode);
                 message = "Файл успешно обновлён.";
                 return true;
@@ -29,6 +31,16 @@ namespace Editor_Core
                 message = $"Ошибка редактирования: {ex.Message}";
                 return false;
             }
+        }
+
+        private string Unescape(string s)
+        {
+            return s
+                .Replace("\\n", "\n")
+                .Replace("\\r", "\r")
+                .Replace("\\t", "\t")
+                .Replace("\\\"", "\"")
+                .Replace("\\\\", "\\");
         }
 
         public bool ReplaceInProjectFile(string solutionRoot, string projectName, string fileName, string pattern, string replacement, out string message)
