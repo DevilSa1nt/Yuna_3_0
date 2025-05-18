@@ -170,7 +170,7 @@ namespace TgBot_Core
                                     if (builder.BuildProject(csprojPath, out string buildMsg))
                                     {
                                         await botClient.SendMessage(chat.Id, $"✅ Код обновлён и собрано:\n{editMsg}");
-                                        // Можно перезапустить из Yuna_Core через событие или флаг
+                                        Restart?.Invoke();
                                     }
                                     else
                                     {
@@ -190,7 +190,11 @@ namespace TgBot_Core
 
                                 var manager = new SolutionManager(@"E:\Yuna_3_0");
                                 if (manager.CreateNewProject(parts[1], out string output))
+                                {
                                     await botClient.SendMessage(chat.Id, $"✅ Проект создан:\n{output}");
+                                    Restart?.Invoke();
+                                }
+
                                 else
                                     await botClient.SendMessage(chat.Id, $"❌ Ошибка:\n{output}");
                             }
@@ -202,7 +206,10 @@ namespace TgBot_Core
 
                                 var manager = new SolutionManager(@"E:\Yuna_3_0");
                                 if (manager.AddProjectReference(parts[1], parts[2], out string output))
+                                {
                                     await botClient.SendMessage(chat.Id, $"✅ Ссылка добавлена:\n{output}");
+                                    Restart?.Invoke();
+                                }
                                 else
                                     await botClient.SendMessage(chat.Id, $"❌ Ошибка:\n{output}");
                             }
