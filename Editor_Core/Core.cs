@@ -48,5 +48,24 @@ namespace Editor_Core
             string filePath = Path.Combine(solutionRoot, projectName, fileName);
             return ReplaceInFile(filePath, pattern, replacement, out message);
         }
+
+        public bool SaveFileToProject(string solutionRoot, string projectName, string fileName, string rawCode, out string message)
+        {
+            try
+            {
+                string code = Unescape(rawCode);
+
+                string filePath = Path.Combine(solutionRoot, projectName, fileName);
+                File.WriteAllText(filePath, code);
+
+                message = $"✅ Файл сохранён: {projectName}/{fileName}";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                message = $"❌ Ошибка при сохранении файла: {ex.Message}";
+                return false;
+            }
+        }
     }
 }

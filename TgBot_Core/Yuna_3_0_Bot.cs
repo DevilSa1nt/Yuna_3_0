@@ -303,6 +303,28 @@ namespace TgBot_Core
                                 await botClient.SendMessage(chat.Id, $"↩️ Откат выполнен:\n{result}");
                             }
 
+                            else if (message.Text.StartsWith("/uploadcs"))
+                            {
+                                string[] parts = message.Text.Split(new[] { "          " }, StringSplitOptions.None);
+                                if (parts.Length < 4)
+                                {
+                                    await botClient.SendMessage(chat.Id, "❗ Формат: /uploadcs          <Проект>          <ИмяФайла.cs>          <Код>");
+                                    return;
+                                }
+
+                                string project = parts[1];
+                                string fileName = parts[2];
+                                string rawCode = parts[3];
+
+                                var editor = new Editor_Core.Core();
+                                string root = @"E:\Yuna_3_0";
+
+                                if (editor.SaveFileToProject(root, project, fileName, rawCode, out string result))
+                                    await botClient.SendMessage(chat.Id, result);
+                                else
+                                    await botClient.SendMessage(chat.Id, result);
+                            }
+
                             break;
                         }
                     case MessageType.Voice:
