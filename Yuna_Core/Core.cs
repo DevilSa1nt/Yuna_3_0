@@ -80,5 +80,7 @@ namespace Yuna_Core
         public static string OpenAiKey => Configuration["OpenAI:ApiKey"];
         public static string[] AllowedUserIds =>
             Configuration.GetSection("Access:AllowedUserIds").Get<string[]>();
+        public static string WitAiToken => Configuration["WitAI:Token"];
+
     }
 }
