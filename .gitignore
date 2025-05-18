@@ -1,0 +1,44 @@
+# Build files
+bin/
+obj/
+out/
+*.log
+
+# User-specific settings
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS-specific
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# IDE-specific
+.idea/
+*.code-workspace
+*.VC.db
+*.VC.VC.opendb
+
+# Rider/Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Secrets/config
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+*.key
+*.pem
+
+# NuGet and lock files
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+project.assets.json
+*.gpState

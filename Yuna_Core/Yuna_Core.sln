@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yuna_Core", "Yuna_Core.csproj", "{3A451D0C-D4D9-4622-A936-99BAF02EF148}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBot_Core", "..\TgBot_Core\TgBot_Core.csproj", "{2B779259-2A78-42B1-B554-3B9836A4246A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logs_Core", "..\Logs_Core\Logs_Core.csproj", "{29A034CD-C833-4C12-B941-843A82315D0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresqlWorker_Core", "..\PostgresqlWorker_Core\PostgresqlWorker_Core.csproj", "{A846BC57-F40A-4CFC-B592-EB1DE64D5EF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI_Core", "..\AI_Core\AI_Core.csproj", "{9BFFD172-0044-410D-8400-9744D2641BE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor_Core", "..\Editor_Core\Editor_Core.csproj", "{844535A3-82F6-4E28-B003-8A9F56965DE0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A451D0C-D4D9-4622-A936-99BAF02EF148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A451D0C-D4D9-4622-A936-99BAF02EF148}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A451D0C-D4D9-4622-A936-99BAF02EF148}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A451D0C-D4D9-4622-A936-99BAF02EF148}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B779259-2A78-42B1-B554-3B9836A4246A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B779259-2A78-42B1-B554-3B9836A4246A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B779259-2A78-42B1-B554-3B9836A4246A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B779259-2A78-42B1-B554-3B9836A4246A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29A034CD-C833-4C12-B941-843A82315D0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29A034CD-C833-4C12-B941-843A82315D0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29A034CD-C833-4C12-B941-843A82315D0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29A034CD-C833-4C12-B941-843A82315D0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A846BC57-F40A-4CFC-B592-EB1DE64D5EF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A846BC57-F40A-4CFC-B592-EB1DE64D5EF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A846BC57-F40A-4CFC-B592-EB1DE64D5EF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A846BC57-F40A-4CFC-B592-EB1DE64D5EF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BFFD172-0044-410D-8400-9744D2641BE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BFFD172-0044-410D-8400-9744D2641BE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BFFD172-0044-410D-8400-9744D2641BE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BFFD172-0044-410D-8400-9744D2641BE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{844535A3-82F6-4E28-B003-8A9F56965DE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{844535A3-82F6-4E28-B003-8A9F56965DE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{844535A3-82F6-4E28-B003-8A9F56965DE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{844535A3-82F6-4E28-B003-8A9F56965DE0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7E80878E-3240-4E1A-8822-6A12A9E2BB17}
+	EndGlobalSection
+EndGlobal
