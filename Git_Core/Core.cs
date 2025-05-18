@@ -56,5 +56,7 @@ namespace Git_Core
 
             return builder.ToString();
         }
+
+        // <<<COMMANDS>>>
     }
 }

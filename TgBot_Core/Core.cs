@@ -1,4 +1,4 @@
-﻿using static Telegram.Bot.TelegramBotClient;
+using static Telegram.Bot.TelegramBotClient;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot;
