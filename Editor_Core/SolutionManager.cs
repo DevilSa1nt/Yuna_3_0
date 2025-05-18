@@ -67,7 +67,36 @@ namespace Editor_Core
             p.WaitForExit();
             return result;
         }
+         
+        public bool RemoveProject(string projectName, out string output)
+        {
+            string projectPath = Path.Combine(_solutionRoot, projectName);
+            string csprojPath = Path.Combine(projectPath, $"{projectName}.csproj");
 
-        // <<<EXTENSIONS>>>
+            if (!File.Exists(csprojPath))
+            {
+                output = $"❌ Проект {projectName} не найден.";
+                return false;
+            }
+
+            output = Run("dotnet", $"sln remove \"{csprojPath}\"", _solutionRoot);
+            Directory.Delete(projectPath, true);
+            return true;
+        }
+
+        public bool RemoveProjectReference(string fromProject, string toProject, out string output)
+        {
+            string fromPath = Path.Combine(_solutionRoot, fromProject, $"{fromProject}.csproj");
+            string toPath = Path.Combine(_solutionRoot, toProject, $"{toProject}.csproj");
+
+            if (!File.Exists(fromPath) || !File.Exists(toPath))
+            {
+                output = "❌ Один из проектов не найден.";
+                return false;
+            }
+
+            output = Run("dotnet", $"remove \"{fromPath}\" reference \"{toPath}\"", _solutionRoot);
+            return true;
+}          // <<<EXTENSIONS>>>
     }
 }

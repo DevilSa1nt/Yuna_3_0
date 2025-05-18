@@ -130,7 +130,7 @@ namespace TgBot_Core
                                 Restart?.Invoke();
                             }
 
-                            if (message.Text.StartsWith("/commit"))
+                            else if(message.Text.StartsWith("/commit"))
                             {
                                 string commitMessage = message.Text.Substring(7).Trim();
                                 string repoPath = @"E:\Yuna_3_0"; // Путь к твоему git-репозиторию
@@ -145,9 +145,9 @@ namespace TgBot_Core
                                 }
                             }
 
-                            if (message.Text.StartsWith("/edit"))
+                            else if(message.Text.StartsWith("/edit"))
                             {
-                                string[] parts = message.Text.Split(' ', 5); // команда + 4 аргумента
+                                string[] parts = message.Text.Split("          ", 5); // команда + 4 аргумента
                                 if (parts.Length < 5)
                                 {
                                     await botClient.SendMessage(chat.Id, "❗ Формат команды: /edit <проект> <файл.cs> <паттерн> <замена>");
@@ -183,9 +183,9 @@ namespace TgBot_Core
                                 }
                             }
 
-                            if (message.Text.StartsWith("/newproject"))
+                            else if(message.Text.StartsWith("/newproject"))
                             {
-                                string[] parts = message.Text.Split(' ');
+                                string[] parts = message.Text.Split("          ");
                                 if (parts.Length < 2) return;
 
                                 var manager = new SolutionManager(@"E:\Yuna_3_0");
@@ -199,9 +199,9 @@ namespace TgBot_Core
                                     await botClient.SendMessage(chat.Id, $"❌ Ошибка:\n{output}");
                             }
 
-                            if (message.Text.StartsWith("/addref"))
+                            else if(message.Text.StartsWith("/addref"))
                             {
-                                string[] parts = message.Text.Split(' ');
+                                string[] parts = message.Text.Split("          ");
                                 if (parts.Length < 3) return;
 
                                 var manager = new SolutionManager(@"E:\Yuna_3_0");
@@ -212,6 +212,48 @@ namespace TgBot_Core
                                 }
                                 else
                                     await botClient.SendMessage(chat.Id, $"❌ Ошибка:\n{output}");
+                            }
+
+                            else if (message.Text.StartsWith("/removeproject"))
+                            {
+                                string[] parts = message.Text.Split(new[] { "          " }, StringSplitOptions.None);
+                                if (parts.Length < 2)
+                                {
+                                    await botClient.SendMessage(chat.Id, "❗ Формат: /removeproject          <ProjectName>");
+                                    return;
+                                }
+
+                                var manager = new SolutionManager(@"E:\Yuna_3_0");
+
+                                if (manager.RemoveProject(parts[1], out string output))
+                                {
+                                    await botClient.SendMessage(chat.Id, $"✅ Проект \"{parts[1]}\" удалён.\n\n{output}");
+                                }
+                                else
+                                {
+                                    await botClient.SendMessage(chat.Id, $"❌ Ошибка при удалении проекта:\n\n{output}");
+                                }
+                            }
+
+                            else if (message.Text.StartsWith("/removeref"))
+                            {
+                                string[] parts = message.Text.Split(new[] { "          " }, StringSplitOptions.None);
+                                if (parts.Length < 3)
+                                {
+                                    await botClient.SendMessage(chat.Id, "❗ Формат: /removeref          <FromProject>          <ToProject>");
+                                    return;
+                                }
+
+                                var manager = new SolutionManager(@"E:\Yuna_3_0");
+
+                                if (manager.RemoveProjectReference(parts[1], parts[2], out string output))
+                                {
+                                    await botClient.SendMessage(chat.Id, $"✅ Ссылка из \"{parts[1]}\" на \"{parts[2]}\" удалена.\n\n{output}");
+                                }
+                                else
+                                {
+                                    await botClient.SendMessage(chat.Id, $"❌ Ошибка при удалении ссылки:\n\n{output}");
+                                }
                             }
 
                             break;
@@ -255,6 +297,8 @@ namespace TgBot_Core
         }
 
         public event Action Restart;
+
+        // <<<COMMANDS>>>
 
     }
 }
