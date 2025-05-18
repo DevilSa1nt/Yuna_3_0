@@ -8,6 +8,7 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types;
 using Telegram.Bot;
+using Editor_Core;
 
 namespace TgBot_Core
 {
@@ -128,6 +129,7 @@ namespace TgBot_Core
                             {
                                 Restart?.Invoke();
                             }
+
                             if (message.Text.StartsWith("/commit"))
                             {
                                 string commitMessage = message.Text.Substring(7).Trim();
@@ -141,6 +143,68 @@ namespace TgBot_Core
                                 {
                                     await botClient.SendMessage(chat.Id, $"❌ Ошибка при пуше:\n\n{result}");
                                 }
+                            }
+
+                            if (message.Text.StartsWith("/edit"))
+                            {
+                                string[] parts = message.Text.Split(' ', 5); // команда + 4 аргумента
+                                if (parts.Length < 5)
+                                {
+                                    await botClient.SendMessage(chat.Id, "❗ Формат команды: /edit <проект> <файл.cs> <паттерн> <замена>");
+                                    return;
+                                }
+
+                                string project = parts[1];
+                                string file = parts[2];
+                                string pattern = parts[3];
+                                string replacement = parts[4];
+
+                                var editor = new Editor_Core.Core();
+                                var builder = new ProjectBuilder();
+
+                                string root = @"E:\Yuna_3_0"; // путь к решению
+                                string csprojPath = Path.Combine(root, project, $"{project}.csproj");
+
+                                if (editor.ReplaceInProjectFile(root, project, file, pattern, replacement, out string editMsg))
+                                {
+                                    if (builder.BuildProject(csprojPath, out string buildMsg))
+                                    {
+                                        await botClient.SendMessage(chat.Id, $"✅ Код обновлён и собрано:\n{editMsg}");
+                                        // Можно перезапустить из Yuna_Core через событие или флаг
+                                    }
+                                    else
+                                    {
+                                        await botClient.SendMessage(chat.Id, $"⚠️ Код обновлён, но сборка не удалась:\n{buildMsg}");
+                                    }
+                                }
+                                else
+                                {
+                                    await botClient.SendMessage(chat.Id, $"❌ Ошибка редактирования:\n{editMsg}");
+                                }
+                            }
+
+                            if (message.Text.StartsWith("/newproject"))
+                            {
+                                string[] parts = message.Text.Split(' ');
+                                if (parts.Length < 2) return;
+
+                                var manager = new SolutionManager(@"E:\Yuna_3_0");
+                                if (manager.CreateNewProject(parts[1], out string output))
+                                    await botClient.SendMessage(chat.Id, $"✅ Проект создан:\n{output}");
+                                else
+                                    await botClient.SendMessage(chat.Id, $"❌ Ошибка:\n{output}");
+                            }
+
+                            if (message.Text.StartsWith("/addref"))
+                            {
+                                string[] parts = message.Text.Split(' ');
+                                if (parts.Length < 3) return;
+
+                                var manager = new SolutionManager(@"E:\Yuna_3_0");
+                                if (manager.AddProjectReference(parts[1], parts[2], out string output))
+                                    await botClient.SendMessage(chat.Id, $"✅ Ссылка добавлена:\n{output}");
+                                else
+                                    await botClient.SendMessage(chat.Id, $"❌ Ошибка:\n{output}");
                             }
 
                             break;

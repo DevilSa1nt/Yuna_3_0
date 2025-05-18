@@ -30,5 +30,11 @@ namespace Editor_Core
                 return false;
             }
         }
+
+        public bool ReplaceInProjectFile(string solutionRoot, string projectName, string fileName, string pattern, string replacement, out string message)
+        {
+            string filePath = Path.Combine(solutionRoot, projectName, fileName);
+            return ReplaceInFile(filePath, pattern, replacement, out message);
+        }
     }
 }

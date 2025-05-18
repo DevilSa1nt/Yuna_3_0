@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Editor_Core\Editor_Core.csproj" />
     <ProjectReference Include="..\Git_Core\Git_Core.csproj" />
     <ProjectReference Include="..\Logs_Core\Logs_Core.csproj" />
   </ItemGroup>
