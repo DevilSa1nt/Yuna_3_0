@@ -18,7 +18,7 @@ namespace Editor_Core
             {
                 string code = File.ReadAllText(filePath);
 
-                string newCode = Regex.Replace(code, pattern, replacement);
+                string newCode = code.Replace(pattern, replacement);
 
                 File.WriteAllText(filePath, newCode);
                 message = "Файл успешно обновлён.";
