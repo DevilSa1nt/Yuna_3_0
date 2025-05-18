@@ -128,6 +128,20 @@ namespace TgBot_Core
                             {
                                 Restart?.Invoke();
                             }
+                            if (message.Text.StartsWith("/commit"))
+                            {
+                                string commitMessage = message.Text.Substring(7).Trim();
+                                string repoPath = @"E:\Yuna_3_0"; // Путь к твоему git-репозиторию
+
+                                if (Git_Core.Core.CommitAndPush(repoPath, commitMessage, out string result))
+                                {
+                                    await botClient.SendMessage(chat.Id, $"✅ Коммит и пуш выполнены:\n\n{result}");
+                                }
+                                else
+                                {
+                                    await botClient.SendMessage(chat.Id, $"❌ Ошибка при пуше:\n\n{result}");
+                                }
+                            }
 
                             break;
                         }
