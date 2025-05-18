@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -325,6 +325,29 @@ namespace TgBot_Core
                                     await botClient.SendMessage(chat.Id, result);
                             }
 
+                            else if (message.Text.StartsWith("/git"))
+                            {
+                                string[] parts = message.Text.Split(new[] { "          " }, StringSplitOptions.None);
+                                if (parts.Length < 2)
+                                {
+                                    await botClient.SendMessage(chat.Id, "❗️ Формат: /git          <аргументы git>");
+                                    return;
+                                }
+
+                                string gitArgs = parts[1];
+                                string repoPath = @"E:\Yuna_3_0";
+
+                                try
+                                {
+                                    string result = Git_Core.Core.RunGit(gitArgs, repoPath);
+                                    await botClient.SendMessage(chat.Id, $"✅ Результат:{result}");
+                                }
+                                catch (Exception ex)
+                                {
+                                    await botClient.SendMessage(chat.Id, $"❌ Ошибка:{ex.Message}");
+                                }
+                            }          // <<<COMMANDS>>>
+
                             break;
                         }
                     case MessageType.Voice:
@@ -366,8 +389,6 @@ namespace TgBot_Core
         }
 
         public event Action Restart;
-
-        // <<<COMMANDS>>>
 
     }
 }
