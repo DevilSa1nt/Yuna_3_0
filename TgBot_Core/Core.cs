@@ -26,11 +26,11 @@ namespace TgBot_Core
 
         Yuna_3_0_Bot yuna_3_0_Bot;
 
-        public Core(string token, string openaiToken)
+        public Core(string token, string openaiToken, string witAiToken)
         {
             _token = token;
 
-            yuna_3_0_Bot = new(_token, openaiToken);
+            yuna_3_0_Bot = new(_token, openaiToken, witAiToken);
 
             yuna_3_0_Bot.Restart += Restart;
         }

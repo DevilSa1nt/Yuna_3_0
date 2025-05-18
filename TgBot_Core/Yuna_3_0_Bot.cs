@@ -21,11 +21,13 @@ namespace TgBot_Core
 
         string _token;
         string _openaiToken;
+        string _witAiToken;
 
-        public Yuna_3_0_Bot(string token, string openaiToken)
+        public Yuna_3_0_Bot(string token, string openaiToken, string witAiToken)
         {
             _token = token;
             _openaiToken = openaiToken;
+            _witAiToken = witAiToken;
 
             Work();
         }
@@ -354,6 +356,37 @@ namespace TgBot_Core
                         {
                             //Logs_Core.Core.AddLog("Voice", DateTime.Now, (this.GetType()).ToString() + ".UpdateHandler_Message()", 1);
 
+                            if (message.Voice != null)
+                            {
+                                var fileId = message.Voice.FileId;
+
+                                // 1. Получаем объект файла
+                                var file = await botClient.GetFile(fileId);
+
+                                // 2. Строим URL файла
+                                string filePath = file.FilePath;
+                                string botToken = _token;
+                                string fileUrl = $"https://api.telegram.org/file/bot{botToken}/{filePath}";
+
+                                // 3. Скачиваем файл вручную
+                                using var httpClient = new HttpClient();
+                                byte[] audioData = await httpClient.GetByteArrayAsync(fileUrl);
+
+                                // 4. Распознаём
+                                var recognizer = new Voice_Core.WitAiRecognizer(_witAiToken);
+                                string result;
+
+                                try
+                                {
+                                    result = await recognizer.TranscribeAsync(audioData, "voice.ogg");
+                                }
+                                catch (Exception ex)
+                                {
+                                    result = "❌ Ошибка при распознавании: " + ex.Message;
+                                }
+
+                                await botClient.SendMessage(chat.Id, $"🎤 Распознанный текст:\n\n{result}");
+                            }
                             break;
                         }
 
