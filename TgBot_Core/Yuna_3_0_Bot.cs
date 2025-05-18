@@ -20,10 +20,12 @@ namespace TgBot_Core
         User _bot;
 
         string _token;
+        string _openaiToken;
 
-        public Yuna_3_0_Bot(string token)
+        public Yuna_3_0_Bot(string token, string openaiToken)
         {
             _token = token;
+            _openaiToken = openaiToken;
 
             Work();
         }
@@ -254,6 +256,51 @@ namespace TgBot_Core
                                 {
                                     await botClient.SendMessage(chat.Id, $"❌ Ошибка при удалении ссылки:\n\n{output}");
                                 }
+                            }
+                            else if (message.Text.StartsWith("/ai-edit"))
+                            {
+                                string[] parts = message.Text.Split(new[] { "          " }, StringSplitOptions.None);
+                                if (parts.Length < 4)
+                                {
+                                    await botClient.SendMessage(chat.Id, "❗ Формат: /ai-edit          <Проект>          <Файл.cs>          <инструкция>");
+                                    return;
+                                }
+
+                                string project = parts[1];
+                                string fileName = parts[2];
+                                string instruction = parts[3];
+
+                                string solutionRoot = @"E:\Yuna_3_0";
+                                string filePath = Path.Combine(solutionRoot, project, fileName);
+
+                                if (!File.Exists(filePath))
+                                {
+                                    await botClient.SendMessage(chat.Id, $"❌ Файл не найден: {filePath}");
+                                    return;
+                                }
+
+                                string originalCode = File.ReadAllText(filePath);
+
+                                var ai = new AI_Core.Core(_openaiToken); // из AI_Core
+                                string prompt = $"Ты помощник разработчика. Прими код:\n\n{originalCode}\n\nВнеси изменения по инструкции: {instruction}";
+                                string updatedCode = ai.GetUpdatedCode(prompt); // метод ты можешь сам реализовать
+
+                                if (!string.IsNullOrWhiteSpace(updatedCode))
+                                {
+                                    File.WriteAllText(filePath, updatedCode);
+                                    await botClient.SendMessage(chat.Id, $"✅ Изменения внесены с помощью AI и файл обновлён.");
+                                }
+                                else
+                                {
+                                    await botClient.SendMessage(chat.Id, $"❌ AI не вернул результат.");
+                                }
+                            }
+                            else if (message.Text.StartsWith("/rollback"))
+                            {
+                                string repoPath = @"E:\Yuna_3_0";
+                                string result = Git_Core.Core.RunGit("reset --hard HEAD~1", repoPath);
+
+                                await botClient.SendMessage(chat.Id, $"↩️ Откат выполнен:\n{result}");
                             }
 
                             break;

@@ -29,7 +29,7 @@ namespace Git_Core
             }
         }
 
-        private static string RunGit(string arguments, string workingDirectory)
+        public static string RunGit(string arguments, string workingDirectory)
         {
             var process = new Process
             {

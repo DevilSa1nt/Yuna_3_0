@@ -26,7 +26,7 @@ namespace Yuna_Core
 
         async Task Work()
         {
-            tgBotCore = new(AppConfig.TgToken);
+            tgBotCore = new(AppConfig.TgToken, AppConfig.OpenAiKey);
 
             tgBotCore.RestartT += RestartApplication;
         }
