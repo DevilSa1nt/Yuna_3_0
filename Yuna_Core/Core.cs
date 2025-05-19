@@ -12,12 +12,14 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 
 using TgBot_Core;
+using Mic_Core;
 
 namespace Yuna_Core
 {
     public class Core
     {
         TgBot_Core.Core tgBotCore;
+        Mic_Core.MicManager _mic;
 
         public Core()
         {
@@ -27,8 +29,9 @@ namespace Yuna_Core
         async Task Work()
         {
             tgBotCore = new(AppConfig.TgToken, AppConfig.OpenAiKey, AppConfig.WitAiToken);
-
             tgBotCore.RestartT += RestartApplication;
+
+            _mic = new(AppConfig.OpenAiKey, AppConfig.WitAiToken);
         }
 
         public static void RestartApplication()
