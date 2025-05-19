@@ -1,37 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Reflection;
-using System.Windows;
 using System.IO;
+using System.Threading.Tasks;
+using System.Windows;
 using Microsoft.Extensions.Configuration;
 
 using TgBot_Core;
 using Mic_Core;
+using Vision_Core;
+using System.Windows.Media.Imaging;
 
 namespace Yuna_Core
 {
     public class Core
     {
-        TgBot_Core.Core tgBotCore;
-        Mic_Core.MicManager _mic;
+        public VisionCore Vision { get; private set; }
 
-        public Core()
-        {
-            Work();
-        }
+        private TgBot_Core.Core tgBotCore;
+        private MicManager _mic;
 
-        async Task Work()
+        // 🔹 Событие, которое будет слушать MainWindow
+        public event Action<BitmapSource> OnCameraFrame;
+
+        public async Task InitAsync()
         {
             tgBotCore = new(AppConfig.TgToken, AppConfig.OpenAiKey, AppConfig.WitAiToken);
             tgBotCore.RestartT += RestartApplication;
 
             _mic = new(AppConfig.OpenAiKey, AppConfig.WitAiToken);
+
+            Vision = new(AppConfig.Configuration);
+
+            // 🔄 Проксируем кадры от VisionCore в наше событие
+            Vision.OnFrameReady += bmp => OnCameraFrame?.Invoke(bmp);
+
+            await Task.CompletedTask;
         }
 
         public static void RestartApplication()
@@ -46,14 +49,12 @@ namespace Yuna_Core
 
             try
             {
-                // Запускаем новое приложение
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = exePath,
                     UseShellExecute = true
                 });
 
-                // Корректное завершение приложения из UI-потока
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     Application.Current.Shutdown();
@@ -63,7 +64,6 @@ namespace Yuna_Core
             {
                 MessageBox.Show("Ошибка при перезапуске: " + ex.Message);
             }
-
         }
     }
 
@@ -84,6 +84,5 @@ namespace Yuna_Core
         public static string[] AllowedUserIds =>
             Configuration.GetSection("Access:AllowedUserIds").Get<string[]>();
         public static string WitAiToken => Configuration["WitAI:Token"];
-
     }
 }

@@ -1,28 +1,34 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
+﻿using System.Windows;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Yuna_Core;
 
 namespace Yuna_Core
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        Core core;
+        private Core _core;
 
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += MainWindow_Loaded;
+        }
 
-            core = new();
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            _core = new Core();
+            await _core.InitAsync();
+
+            // ✅ Подписываемся на событие, уже проксированное через Core
+            _core.OnCameraFrame += UpdateCameraImage;
+        }
+
+        private void UpdateCameraImage(BitmapSource bitmap)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                CameraImage.Source = bitmap;
+            });
         }
     }
 }
