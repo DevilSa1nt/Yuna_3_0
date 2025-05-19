@@ -9,6 +9,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types;
 using Telegram.Bot;
 using Editor_Core;
+using Voice_Core;
 
 namespace TgBot_Core
 {
@@ -360,33 +361,36 @@ namespace TgBot_Core
                             {
                                 var fileId = message.Voice.FileId;
 
-                                // 1. Получаем объект файла
+                                // 1. Получаем файл
                                 var file = await botClient.GetFile(fileId);
+                                var filePath = file.FilePath;
 
-                                // 2. Строим URL файла
-                                string filePath = file.FilePath;
-                                string botToken = _token;
-                                string fileUrl = $"https://api.telegram.org/file/bot{botToken}/{filePath}";
-
-                                // 3. Скачиваем файл вручную
+                                // 2. Скачиваем как byte[]
+                                string url = $"https://api.telegram.org/file/bot{_token}/{filePath}";
                                 using var httpClient = new HttpClient();
-                                byte[] audioData = await httpClient.GetByteArrayAsync(fileUrl);
+                                byte[] oggData = await httpClient.GetByteArrayAsync(url);
 
-                                // 4. Распознаём
-                                var recognizer = new Voice_Core.WitAiRecognizer(_witAiToken);
                                 string result;
 
                                 try
                                 {
-                                    result = await recognizer.TranscribeAsync(audioData, "voice.ogg");
+                                    byte[] wavData = AudioConverter.ConvertOggToWav(oggData);
+                                    result = await new WhisperRecognizer(_openaiToken).TranscribeAsync(wavData, "voice.wav");
+                                }
+                                catch (Exception ex) when (
+                                    ex.Message.Contains("quota", StringComparison.OrdinalIgnoreCase) ||
+                                    ex.Message.Contains("invalid api key", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    result = await new WitAiRecognizer(_witAiToken).TranscribeAsync(oggData, "voice.ogg");
                                 }
                                 catch (Exception ex)
                                 {
-                                    result = "❌ Ошибка при распознавании: " + ex.Message;
+                                    result = $"❌ Ошибка при распознавании: {ex.Message}";
                                 }
 
                                 await botClient.SendMessage(chat.Id, $"🎤 Распознанный текст:\n\n{result}");
                             }
+
                             break;
                         }
 
