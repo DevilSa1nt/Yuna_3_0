@@ -33,12 +33,12 @@ namespace Yuna_Core
 
             _mic = new(AppConfig.OpenAiKey, AppConfig.WitAiToken);
 
-            Vision = new(AppConfig.Configuration);
+            //Vision = new(AppConfig.Configuration);
 
             // 🔄 Проксируем кадры от VisionCore в наше событие
-            Vision.OnFrameReady += bmp => OnCameraFrame?.Invoke(bmp);
+            //Vision.OnFrameReady += bmp => OnCameraFrame?.Invoke(bmp);
 
-            await Task.CompletedTask;
+            //await Task.CompletedTask;
         }
 
         public static void RestartApplication()
