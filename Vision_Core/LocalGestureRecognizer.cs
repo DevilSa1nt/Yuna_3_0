@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Vision_Core
 {
-    public class LocalGestureRecognizer : IGestureRecognizer
+    public class LocalGestureRecognizer //: IGestureRecognizer
     {
         private readonly InferenceSession _session;
         private readonly string _inputName;
@@ -17,12 +17,13 @@ namespace Vision_Core
         {
             _session = new InferenceSession(modelPath);
             _inputName = _session.InputMetadata.Keys.FirstOrDefault()
-                ?? throw new Exception("ONNX модель не содержит входов.");
+                         ?? throw new Exception("ONNX модель не содержит входов.");
         }
 
         public async Task<List<Point3D>> RecognizeAsync(Mat frame)
         {
-            var resized = frame.Resize(new Size(224, 224));
+            var inputSize = new Size(224, 224);
+            var resized = frame.Resize(inputSize);
             var tensor = new DenseTensor<float>(new[] { 1, 3, 224, 224 });
 
             for (int y = 0; y < 224; y++)
@@ -30,9 +31,9 @@ namespace Vision_Core
                 for (int x = 0; x < 224; x++)
                 {
                     var pixel = resized.At<Vec3b>(y, x);
-                    tensor[0, 0, y, x] = pixel.Item2 / 255.0f;
-                    tensor[0, 1, y, x] = pixel.Item1 / 255.0f;
-                    tensor[0, 2, y, x] = pixel.Item0 / 255.0f;
+                    tensor[0, 0, y, x] = pixel.Item2 / 255.0f; // R
+                    tensor[0, 1, y, x] = pixel.Item1 / 255.0f; // G
+                    tensor[0, 2, y, x] = pixel.Item0 / 255.0f; // B
                 }
             }
 

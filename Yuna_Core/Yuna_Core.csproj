@@ -13,6 +13,7 @@
     <ProjectReference Include="..\Mic_Core\Mic_Core.csproj" />
     <ProjectReference Include="..\TgBot_Core\TgBot_Core.csproj" />
     <ProjectReference Include="..\Vision_Core\Vision_Core.csproj" />
+    <ProjectReference Include="..\Yuna_3dmodel_Core_WPF\Yuna_3dmodel_Core_WPF.csproj" />
   </ItemGroup>
 
   <ItemGroup>

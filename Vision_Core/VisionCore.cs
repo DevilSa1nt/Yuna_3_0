@@ -20,20 +20,9 @@ namespace Vision_Core
         public VisionCore(IConfiguration config)
         {
             var section = config.GetSection("Vision");
-            bool useCloud = section.GetValue<bool>("UseCloud");
+            var url = section.GetValue<string>("PythonApiUrl");
 
-            if (useCloud)
-            {
-                var endpoint = section.GetValue<string>("RoboflowEndpoint");
-                var apiKey = section.GetValue<string>("RoboflowApiKey");
-                _recognizer = new RoboflowRecognizer(endpoint, apiKey);
-            }
-            else
-            {
-                var modelPath = section.GetValue<string>("LocalOnnxPath");
-                _recognizer = new LocalGestureRecognizer("E:\\Yuna_3_0\\Models\\hand_landmark.onnx");
-            }
-
+            _recognizer = new PythonHandRecognizer(url);
             _ = Task.Run(VideoLoop);
         }
 
@@ -47,11 +36,15 @@ namespace Vision_Core
                 capture.Read(frame);
                 if (frame.Empty()) continue;
 
+                // 🔁 Зеркалирование
+                Cv2.Flip(frame, frame, FlipMode.Y);
+
                 try
                 {
-                    var keypoints = await _recognizer.RecognizeAsync(frame);
+                    var hands = await _recognizer.RecognizeHandsAsync(frame);
 
-                    DrawHandSkeleton(frame, keypoints);
+                    foreach (var hand in hands)
+                        DrawHandSkeleton(frame, hand);
 
                     var bmp = ConvertMatToBitmapSource(frame);
                     bmp.Freeze();
@@ -62,20 +55,30 @@ namespace Vision_Core
                     Console.WriteLine($"[VisionCore] Ошибка: {ex.Message}");
                 }
 
-                await Task.Delay(100);
+                await Task.Delay(50);
             }
         }
 
-        private void DrawHandSkeleton(Mat frame, List<Point3D> keypoints)
+        private void DrawHandSkeleton(Mat frame, HandData hand)
         {
-            var color = Scalar.LimeGreen;
+            int w = frame.Width;
+            int h = frame.Height;
 
+            var color = hand.Label == "Right" ? Scalar.Cyan : Scalar.Magenta;
+            var keypoints = hand.Keypoints;
+
+            if (keypoints == null || keypoints.Count == 0) return;
+
+            // 🔹 Нарисовать точки
             for (int i = 0; i < keypoints.Count; i++)
             {
                 var p = keypoints[i];
-                Cv2.Circle(frame, (int)p.X, (int)p.Y, 4, color, -1);
+                int x = (int)(p.X * w);
+                int y = (int)(p.Y * h);
+                Cv2.Circle(frame, new OpenCvSharp.Point(x, y), 4, color, -1);
             }
 
+            // 🔹 Нарисовать кости
             var connections = new List<(int, int)>
             {
                 (0, 1), (1, 2), (2, 3), (3, 4),
@@ -91,8 +94,43 @@ namespace Vision_Core
                 {
                     var p1 = keypoints[start];
                     var p2 = keypoints[end];
-                    Cv2.Line(frame, (int)p1.X, (int)p1.Y, (int)p2.X, (int)p2.Y, color, 2);
+
+                    int x1 = (int)(p1.X * w);
+                    int y1 = (int)(p1.Y * h);
+                    int x2 = (int)(p2.X * w);
+                    int y2 = (int)(p2.Y * h);
+
+                    Cv2.Line(frame, new OpenCvSharp.Point(x1, y1), new OpenCvSharp.Point(x2, y2), color, 2);
                 }
+            }
+
+            // 🔹 Подпись над запястьем
+            var wrist = keypoints[0];
+            int tx = (int)(wrist.X * w);
+            int ty = (int)(wrist.Y * h) - 10;
+            Cv2.PutText(frame, hand.Label, new OpenCvSharp.Point(tx, ty),
+                HersheyFonts.HersheySimplex, 0.6, color, 2);
+
+            // 🔹 Расстояние между большим (4) и указательным (8)
+            if (keypoints.Count > 8)
+            {
+                var thumbTip = keypoints[4];
+                var indexTip = keypoints[8];
+
+                int x1 = (int)(thumbTip.X * w);
+                int y1 = (int)(thumbTip.Y * h);
+                int x2 = (int)(indexTip.X * w);
+                int y2 = (int)(indexTip.Y * h);
+
+                double distance = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
+                string distText = $"{distance:F0}px";
+
+                // Центр между пальцами
+                int midX = (x1 + x2) / 2;
+                int midY = (y1 + y2) / 2;
+
+                Cv2.PutText(frame, distText, new OpenCvSharp.Point(midX, midY - 10),
+                    HersheyFonts.HersheySimplex, 0.55, color, 2);
             }
         }
 

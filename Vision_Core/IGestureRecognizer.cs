@@ -6,6 +6,6 @@ namespace Vision_Core
 {
     public interface IGestureRecognizer
     {
-        Task<List<Point3D>> RecognizeAsync(Mat frame);
+        Task<List<HandData>> RecognizeHandsAsync(Mat frame);
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Vision_Core
 {
-    public class RoboflowRecognizer : IGestureRecognizer
+    public class RoboflowRecognizer //: IGestureRecognizer
     {
         private readonly string _endpoint;
         private readonly string _apiKey;

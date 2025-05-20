@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mic_Core", "..\Mic_Core\Mic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vision_Core", "..\Vision_Core\Vision_Core.csproj", "{4AD1EC9B-FC35-4E9F-99E3-CE59DF3953BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yuna_3dmodel_Core_WPF", "..\Yuna_3dmodel_Core_WPF\Yuna_3dmodel_Core_WPF.csproj", "{A58BD083-0C38-4C92-89E2-7280253DC9D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{4AD1EC9B-FC35-4E9F-99E3-CE59DF3953BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AD1EC9B-FC35-4E9F-99E3-CE59DF3953BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AD1EC9B-FC35-4E9F-99E3-CE59DF3953BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A58BD083-0C38-4C92-89E2-7280253DC9D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A58BD083-0C38-4C92-89E2-7280253DC9D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A58BD083-0C38-4C92-89E2-7280253DC9D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A58BD083-0C38-4C92-89E2-7280253DC9D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

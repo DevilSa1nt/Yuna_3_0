@@ -9,6 +9,7 @@ using TgBot_Core;
 using Mic_Core;
 using Vision_Core;
 using System.Windows.Media.Imaging;
+using Yuna_3dmodel_Core_WPF;
 
 namespace Yuna_Core
 {
@@ -26,6 +27,9 @@ namespace Yuna_Core
         {
             tgBotCore = new(AppConfig.TgToken, AppConfig.OpenAiKey, AppConfig.WitAiToken);
             tgBotCore.RestartT += RestartApplication;
+
+            var yunaWindow = new YunaOverlayWindow();
+            //yunaWindow.Show();
 
             _mic = new(AppConfig.OpenAiKey, AppConfig.WitAiToken);
 
