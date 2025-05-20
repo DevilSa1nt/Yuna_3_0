@@ -29,14 +29,14 @@ namespace Yuna_Core
             tgBotCore.RestartT += RestartApplication;
 
             var yunaWindow = new YunaOverlayWindow();
-            //yunaWindow.Show();
+            yunaWindow.Show();
 
             _mic = new(AppConfig.OpenAiKey, AppConfig.WitAiToken);
 
-            //Vision = new(AppConfig.Configuration);
+            Vision = new(AppConfig.Configuration);
 
             // 🔄 Проксируем кадры от VisionCore в наше событие
-            //Vision.OnFrameReady += bmp => OnCameraFrame?.Invoke(bmp);
+            Vision.OnFrameReady += bmp => OnCameraFrame?.Invoke(bmp);
 
             //await Task.CompletedTask;
         }
