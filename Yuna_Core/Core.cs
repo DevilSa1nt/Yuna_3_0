@@ -79,7 +79,7 @@ namespace Yuna_Core
         {
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("E:\\Yuna_3_0\\appsettings.Development.json")
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
         }
 
